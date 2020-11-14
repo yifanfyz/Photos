@@ -90,11 +90,39 @@ public class PictureFile{
 	public ArrayList<Tags> getTags() {
 		return tags;
 	}
+	
 	public void addTags(String name,String value){
 		tags.add(new Tags(name,value));
 	}
+	
 	public void removeTags(String name,String value){
 		tags.removeIf(tag->tag.getName().equals(name)&&tag.getValue().equals(value));
 	}
+	
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setImageFile(File file) {
+		this.imageFile = file;
+	}
+	
+	public void setTags(ArrayList<Tags> tags) {
+		this.tags = tags;
+	}
+	
+	public PictureFile copyPicture() {
+		
+		PictureFile temp = new PictureFile(this.getImageFile());
+		
+		temp.setCaption(this.getCaption());
+		temp.setLastModifiedDate(this.getLastModifiedDate());
+		temp.setName(this.getName());
+		temp.setTags(this.getTags());
+		
+		return temp;
+	}
+
 }
 

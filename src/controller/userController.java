@@ -28,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Album;
 import model.PictureFile;
@@ -41,35 +42,40 @@ public class userController implements Initializable{
 	User currentUser;
 	String currentUserName;
 	Stage mainStage;
+	int slideCounter;
 	Album currentAlbum;
 	PictureFile currentPic;
+	PictureFile copiedPic;
 	ImageView selectedPicture;
+
 	@FXML Label welcome; 
 	@FXML FlowPane preview;
-	@FXML ImageView display;
 	@FXML Button create;
 	@FXML Button delete;
 	@FXML Button rename;
 	@FXML Button open;
+	@FXML Button copy;
+	@FXML Button move;
+	@FXML Button paste;
 	@FXML Button logout;
 	@FXML Button quit;
-	@FXML ListView<String> albumList;
 	@FXML Button addPhoto;
-	@FXML TextField photoDirct;
-	@FXML Text dateTaken;
-	@FXML Text caption;
-	@FXML TableView<Tags> tagTable;
-	@FXML TextField captionAddField;
 	@FXML Button captionAddButton;
-	@FXML Text photoName;
-	@FXML TextField tagName;
-	@FXML TextField tagValue;
 	@FXML Button addTag;
 	@FXML Button deleteTag;
+	@FXML Button last;
+	@FXML Button next;
+	@FXML Text photoName;
+	@FXML Text dateTaken;
+	@FXML Text caption;
+	@FXML TextField tagName;
+	@FXML TextField tagValue;
+	@FXML ImageView display;
+	@FXML ListView<String> albumList;
+	@FXML TableView<Tags> tagTable;
 
 	private ObservableList<String> displayList;
 	private ArrayList<String> allAlbumName = new ArrayList<String>();
-	
 	
 	
 	@Override
@@ -92,12 +98,6 @@ public class userController implements Initializable{
         displayAlbum();
     }
 		
-		//WORKING QUEUE: 
-		//show other info, 这个最后在说， 可以为内存大小
-
-		
-	
-	
 	public void preload() throws IOException {
 		
 		//逻辑上，preload()只需要加载所有的album，包括album里的每张照片的修改日期，caption，tags
@@ -405,20 +405,12 @@ public class userController implements Initializable{
 				//说明currentAlbum已经是当前要打开的album：映射正确
 				System.out.println("SUCCESS: catch the album: "+currentAlbum.getName());
 				//需要扫描当前album, 获取当前album位置，扫描出所有照片
-				//如果空的相册 不执行打开命令，弹出alert
-				if(currentAlbum.getSize()==0) {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Error occurs....");
-					alert.setHeaderText("Open Album Fails");
-					alert.setContentText("Empty Album");
-					alert.showAndWait();
-				}
+			
+			
 				//相册不为空，可以打开相册展示缩略图
 				File file = new File("src/users/"+currentUser.getName()+"/"+currentAlbum.getName());
 				File[] fs = file.listFiles();
-				//initial();
-				//preload();
-				//displayAlbum();
+				
 				
 				for(File f:fs) {
 
@@ -473,22 +465,37 @@ public class userController implements Initializable{
 	 * @throws IOException io expection
 	 */
 	public void addPhoto(ActionEvent e) throws IOException {
-		String photoAdress = photoDirct.getText();
-		File f = new File(photoAdress);
-		//int index = albumList.getSelectionModel().getSelectedIndex();
+	
 		if (currentAlbum == null) {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Error occurs....");
 			alert.setHeaderText("Add photo FAILED");
-			alert.setContentText("Album not selected");
+			alert.setContentText("NULL ALBUM OPENED");
 			alert.showAndWait();
 		} else {
 
-			String destDirc = "src/users/" + currentUser.getName() + "/" + currentAlbum.getName()+"/"+f.getName();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("View Pictures");
+			fileChooser.getExtensionFilters().addAll(
+					new FileChooser.ExtensionFilter("All Images", "*.*"),
+					new FileChooser.ExtensionFilter("JPG", ".jpg"),
+					new FileChooser.ExtensionFilter("GIF", ".gif"),
+					new FileChooser.ExtensionFilter("BMP", ".bmp"),
+					new FileChooser.ExtensionFilter("PNG", ".png")	
+					);
+			
+			File sourceFile = fileChooser.showOpenDialog(mainStage);
+			File destFile = new File("src/users/"+currentUser.getName()+"/"
+					+currentAlbum.getName()+"/"+sourceFile.getName());
+			
+		//	System.out.println(sourceFile.getPath());
+		//	System.out.println(destFile.getPath());
+			
+			String destDirc = destFile.getPath();
 			Path destPath = Paths.get(destDirc);
-			if (f.isFile() && isPicture(f)) {
+			if (sourceFile.isFile() && isPicture(sourceFile)) {
 				try {
-					Files.copy(f.toPath(), destPath);
+					Files.copy(sourceFile.toPath(), destPath);
 					File destFilePointer = new File(destDirc);
 					Image image = new Image(destFilePointer.toURI().toString());
 					ImageView temp = new ImageView();
@@ -498,12 +505,12 @@ public class userController implements Initializable{
 					temp.setPreserveRatio(true);
 					PictureFile pictureFile = new PictureFile(destFilePointer);
 					currentAlbum.addPhoto(pictureFile);
-					File info = new File("src/users/" + currentUser.getName() + "/" + currentAlbum.getName()+"/"+f.getName()+".txt");
+					File info = new File("src/users/" + currentUser.getName() + "/" + currentAlbum.getName()+"/"+sourceFile.getName()+".txt");
 					String date = pictureFile.getDate();
 					long lastModified = pictureFile.getLastModifiedDate();
 					FileWriter fw = new FileWriter(info,true);
 					BufferedWriter out = new BufferedWriter(fw);
-					out.write("NAME: "+f.getName()+"\n");
+					out.write("NAME: "+sourceFile.getName()+"\n");
 					out.write("DATE: "+date+"\n");
 					out.write("LAST: "+lastModified+"\n");
 					out.write("CAPTION: \n");
@@ -542,6 +549,7 @@ public class userController implements Initializable{
 
 		}
 	}
+	
 	public void quit (ActionEvent e) throws IOException{
 		Button b = (Button) e.getSource();
 		
@@ -578,7 +586,7 @@ public class userController implements Initializable{
 	     
 	}
 	
-	private void writeFile(String path, ArrayList<String> allalbumname) throws IOException {
+	private void writeFile(String path, ArrayList<String> allAlbumName) throws IOException {
 		
 		PrintWriter writer = new PrintWriter(path);
 		writer.print("");
@@ -590,8 +598,8 @@ public class userController implements Initializable{
 	 
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 	 
-		for (int i = 0; i < allalbumname.size(); i++) {
-			bw.write(allalbumname.get(i));
+		for (int i = 0; i < allAlbumName.size(); i++) {
+			bw.write(allAlbumName.get(i));
 			bw.newLine();
 		}
 	 
@@ -627,8 +635,23 @@ public class userController implements Initializable{
     	
     	return false;
     }
+	
     public void addCaption(ActionEvent e) throws IOException {
-		String newCaption = captionAddField.getText();
+    	
+    	String newCaption = null;
+    	TextInputDialog dialog = new TextInputDialog("caption");
+    	dialog.setTitle("Caption");
+    	dialog.setHeaderText("Please input your caption");
+    	dialog.setContentText("Caption: ");
+
+    	// Traditional way to get the response value.
+    	Optional<String> result = dialog.showAndWait();
+    	if (result.isPresent()){
+    	   newCaption = result.get();
+    	}else {
+    		return;
+    	}
+
 		currentPic.setCaption(newCaption);
 
 		displayPhoto(currentPic);
@@ -654,12 +677,29 @@ public class userController implements Initializable{
 		fileOut.close();
 
 	}
+    
 	public void addTag(ActionEvent e) throws IOException {
+		
+		
 		String tagNameString = tagName.getText();
 		String tagValueString = tagValue.getText();
 		String tagString = tagNameString + " " + tagValueString;
-		System.out.println("tagString: "+tagString);
-		System.out.println("src/users/"+currentUserName+"/"+currentAlbum.getName()+"/"+currentPic.getName()+".txt");
+		
+		if(tagNameString=="" || tagValueString=="") {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Ooops, there was an error!");
+			alert.setContentText("You cannot tag with null value");
+			alert.showAndWait();
+		}else {
+			
+		
+		
+		
+		
+		
+	//	System.out.println("tagString: "+tagString);
+	//	System.out.println("src/users/"+currentUserName+"/"+currentAlbum.getName()+"/"+currentPic.getName()+".txt");
 		File fp = new File("src/users/"+currentUserName+"/"+currentAlbum.getName()+"/"+currentPic.getName()+".txt");
 		File f = new File("src/users/"+currentUserName+"/"+currentAlbum.getName()+"/"+currentPic.getName());
 		BufferedReader reader = new BufferedReader(new FileReader("src/users/"+currentUserName+"/"+currentAlbum.getName()+"/"+currentPic.getName()+".txt"));
@@ -701,13 +741,15 @@ public class userController implements Initializable{
 		else{
 			return;
 		}
-
-	}
-	public void printTags(PictureFile pf){
-		for(Tags tag:pf.getTags()){
-			System.out.println(tag.getName()+"  "+tag.getValue());
 		}
 	}
+	
+	public void printTags(PictureFile pf){
+		for(Tags tag:pf.getTags()){
+	//		System.out.println(tag.getName()+"  "+tag.getValue());
+		}
+	}
+	
     public void displayPhoto(PictureFile pf){
 		//display date
 		dateTaken.setText(pf.getDate());
@@ -725,7 +767,7 @@ public class userController implements Initializable{
 		nameColumn.setCellValueFactory(new PropertyValueFactory<Tags,String>("name"));
 		valueColumn.setCellValueFactory(new PropertyValueFactory<Tags,String>("value"));
 		int tagNum = pf.getTags().size();
-		System.out.println(tagNum);
+	//	System.out.println(tagNum);
 
 
 		tagTable.getColumns().clear();
@@ -733,6 +775,7 @@ public class userController implements Initializable{
 		tagTable.getColumns().addAll(nameColumn,valueColumn);
 
 	}
+    
 	public ObservableList<Tags> getTags(PictureFile pf,int tagNum){
 		ObservableList<Tags> tags = FXCollections.observableArrayList();
 		for(int i = 0; i < tagNum; i++){
@@ -740,6 +783,7 @@ public class userController implements Initializable{
 		}
 		return tags;
 	}
+	
 	public void deleteTag() throws IOException {
 		//delete TableView row and txt file and PictureFile tag
 
@@ -791,11 +835,173 @@ public class userController implements Initializable{
 		textFile.delete();
 		display.setImage(null);
 		displayAlbum();
-
+		
 	}
 
+	public void movePhoto(ActionEvent e) throws IOException{
+		Button b = (Button)e.getSource();
+		
+		
+		if(b==copy) {
+			
+			copiedPic = currentPic.copyPicture();
+			System.out.println("Selected photo: "+copiedPic.getName());
+			
+		}else if(b==move || b==paste) {
+			//move copiedPic to destination
+			
+			//首先得到选中的相册，如果是同一个相册->alert error
+			
+			//得到相册后 进行修改
+			
+			int index = albumList.getSelectionModel().getSelectedIndex();
+			
+			if(index == -1 || index == currentUser.getGallery().indexOf(currentAlbum) ) {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Error occurs....");
+				alert.setHeaderText("Copy Photo Fails");
+				alert.setContentText("Select A Valid Album");
+				alert.showAndWait();
+				
+				System.out.println("FAIL: cannot copy the photo: Unvalid Album");
+				return;
+			}else {
+				
+				System.out.println("currentAlbum: "+currentUser.getGallery().get(index).getName());
+				//选好相册后，进行照片名查重复
+				for(int i=0; i<currentUser.getGallery().get(index).getSize(); i++) {
+					if(copiedPic.getName().compareTo(currentUser.getGallery().get(index).getPhotoCollection().get(i).getName())==0) {
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Error occurs....");
+						alert.setHeaderText("Copy Photo Fails");
+						alert.setContentText("Duplicated Photo Found");
+						alert.showAndWait();
+						
+						System.out.println("FAIL: cannot copy the photo: Duplicated Photo");
+						return;
+					}
+				}
+				
+				//修改内存文件,图片文件和txt文件
+				//修改闪存
+				//修改txt
+				copyFile(copiedPic.getImageFile().getPath(), 
+						"src/users/"+currentUser.getName()+"/"+currentUser.getGallery().get(index).getName()+"/"+copiedPic.getName());
+				copyFile("src/users/"+currentUser.getName()+"/"+currentAlbum.getName()+"/"+copiedPic.getName()+".txt", 
+						 "src/users/"+currentUser.getName()+"/"+currentUser.getGallery().get(index).getName()+"/"+copiedPic.getName()+".txt");
+				
+				//System.out.println("src/users/"+currentUser.getName()+"/"+currentAlbum.getName()+"/"+copiedPic.getName()+".txt");
+				//System.out.println();
+				
+				currentUser.getGallery().get(index).addPhoto(copiedPic);
+				displayAlbum();
+			
+				
+			}
+			
+			
+			//如果是move，还要删除原来的图 list txt
+			if(b==move) {
+				
+				File temp = new File("src/users/"+currentUser.getName()+"/"+currentAlbum.getName()+"/"+currentPic.getName()+".txt");
+				temp.delete();
+				File temp2 = new File("src/users/"+currentUser.getName()+"/"+currentAlbum.getName()+"/"+currentPic.getName());
+				temp2.delete();
+				
+				currentAlbum.deletePhoto(currentPic);
+				displayAlbum();
+			}
+			
+		}else {
+			System.out.println("FAIL: NEITHER COPY NOR MOVE");
+		}
+		
+		
+		
+	}
+
+	public static void copyFile(String src,String target){	
+		File srcFile = new File(src);  
+		   File targetFile = new File(target);  
+		   try {  
+		       InputStream in = new FileInputStream(srcFile);   
+		       OutputStream out = new FileOutputStream(targetFile);  
+		       byte[] bytes = new byte[1024];  
+		       int len = -1;  
+		       while((len=in.read(bytes))!=-1)
+		       {  
+		           out.write(bytes, 0, len);  
+		       }  
+		       in.close();  
+		       out.close();  
+		   } catch (FileNotFoundException e) {  
+		       e.printStackTrace();  
+		   } catch (IOException e) {  
+		       e.printStackTrace();  
+		   }  
+		   System.out.println("文件复制成功"); 
 
 
-
+	}
+		 
+	public void slideShow(ActionEvent e) throws IOException{
+		Button b = (Button)e.getSource();
+		
+		
+		if(b==next) {
+			if(slideCounter <= currentAlbum.getSize()-2) {
+			//	System.out.println("slideCounter: "+slideCounter);
+			//	System.out.println("currentAlbumSize: "+currentAlbum.getSize());
+				
+				String path = "src/users/"+ currentUser.getName()+"/"+currentAlbum.getName()+"/"
+					+currentAlbum.getPhotoCollection().get(slideCounter+1).getName();
+				Image image = new Image(new FileInputStream(path));
+				display.setImage(image);
+				currentPic = currentAlbum.getPhotoCollection().get(slideCounter+1);
+				displayPhoto(currentPic);
+				slideCounter++;
+				
+			}else if(slideCounter == currentAlbum.getSize()-1){
+				slideCounter = 0;
+				String path = "src/users/"+ currentUser.getName()+"/"+currentAlbum.getName()+"/"
+						+currentAlbum.getPhotoCollection().get(slideCounter).getName();
+				Image image = new Image(new FileInputStream(path));
+				display.setImage(image);
+				currentPic = currentAlbum.getPhotoCollection().get(slideCounter);
+				displayPhoto(currentPic);
+	
+			}
+			
+			
+	
+		}else if(b==last) {
+			
+			if(slideCounter >=1) {
+				
+				String path = "src/users/"+ currentUser.getName()+"/"+currentAlbum.getName()+"/"
+					+currentAlbum.getPhotoCollection().get(slideCounter-1).getName();
+				Image image = new Image(new FileInputStream(path));
+				display.setImage(image);
+				currentPic = currentAlbum.getPhotoCollection().get(slideCounter-1);
+				displayPhoto(currentPic);
+				slideCounter --;
+				
+			}else if(slideCounter ==0 ){
+				slideCounter = currentAlbum.getSize()-1;
+				String path = "src/users/"+ currentUser.getName()+"/"+currentAlbum.getName()+"/"
+						+currentAlbum.getPhotoCollection().get(slideCounter).getName();
+				Image image = new Image(new FileInputStream(path));
+				display.setImage(image);
+				currentPic = currentAlbum.getPhotoCollection().get(slideCounter);
+				displayPhoto(currentPic);
+				
+			}
+			
+		}else {
+			System.out.println("FAIL: SLIDESHOW");
+		}
+	
+		
+	}
 
 }

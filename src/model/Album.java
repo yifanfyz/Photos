@@ -50,21 +50,40 @@ public class Album{
     public void addPhoto(PictureFile p) {
     	photoCollection.add(p);
     	
-    	if( p.getLastModifiedDate() < earliestDate) {
-    		this.earliestDate  = p.getLastModifiedDate();
-    		this.earlistDateFormat = sdf.format(earliestDate);
-    	}
-    	
-    	if(p.getLastModifiedDate()>latestDate) {
-    		this.latestDate = p.getLastModifiedDate();
-    		this.latestDateFormat = sdf.format(latestDate);
-    	}
+    	updateLastModifiedDate();
     	
     	rangeOfDate = earlistDateFormat+"--"+ latestDateFormat;
     }
    public void deletePhoto(PictureFile p){
         photoCollection.remove(p);
+        updateLastModifiedDate();
+        rangeOfDate = earlistDateFormat+"--"+ latestDateFormat;
    }
+   
+   private void updateLastModifiedDate() {
+	   earliestDate = Long.MAX_VALUE;
+	   latestDate = Long.MIN_VALUE;
+	   
+	   for (int i = 0; i<photoCollection.size(); i++) {
+		   
+		   
+		   if( photoCollection.get(i).getLastModifiedDate() < earliestDate) {
+	    		this.earliestDate  = photoCollection.get(i).getLastModifiedDate();
+	    		this.earlistDateFormat = sdf.format(earliestDate);
+	    	}
+	    	
+	    	if(photoCollection.get(i).getLastModifiedDate()>latestDate) {
+	    		this.latestDate = photoCollection.get(i).getLastModifiedDate();
+	    		this.latestDateFormat = sdf.format(latestDate);
+	    	}
+	   }
+	   
+   }
+   
+   
+   
+   
+   
     public int getSize() {
     	return photoCollection.size();
     }

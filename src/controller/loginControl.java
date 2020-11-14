@@ -73,7 +73,7 @@ public class loginControl {
                String path = "src/users/currentUser.txt";
                writeFile(path, username);
                Parent parent = loader.load();
-               Scene scene = new Scene(parent,1400,730);
+               Scene scene = new Scene(parent,1025,730);
                stage.setScene(scene);
                stage.setTitle("PrivateApp");
                stage.show();
