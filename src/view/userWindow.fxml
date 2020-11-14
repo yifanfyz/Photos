@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?fxml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.userController">
+   <children>
+      <Label fx:id="welcome" alignment="CENTER_RIGHT" layoutX="610.0" layoutY="45.0" prefHeight="61.0" prefWidth="400.0" text="User Interface" textAlignment="RIGHT" wrapText="true">
+         <font>
+            <Font name="Baloo Bhaijaan Regular" size="33.0" />
+         </font>
+         <textFill>
+            <LinearGradient cycleMethod="REFLECT" endX="0.8465227817745803" endY="1.0" startX="0.8968824940047961">
+               <stops>
+                  <Stop color="#4c44a4" />
+                  <Stop color="#4c44a4" offset="0.007532956685499058" />
+                  <Stop color="#c96e6e" offset="0.9962335216572504" />
+                  <Stop color="#c96e6e" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <ListView fx:id="albumList" layoutX="16.0" layoutY="98.0" prefHeight="610.0" prefWidth="272.0" />
+      <ToolBar layoutX="-1.0" layoutY="-1.0" prefHeight="25.0" prefWidth="1400.0">
+        <items>
+            <Button fx:id="create" mnemonicParsing="false" onAction="#createAlbum" prefHeight="30.0" prefWidth="75.0" text="CREATE">
+               <font>
+                  <Font name="Kohinoor Devanagari Regular" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteAlbum" prefHeight="30.0" prefWidth="75.0" text="DELETE">
+               <font>
+                  <Font name="Kohinoor Devanagari Regular" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="rename" mnemonicParsing="false" onAction="#renameAlbum" prefHeight="30.0" prefWidth="75.0" text="RENAME">
+               <font>
+                  <Font name="Kohinoor Devanagari Regular" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="open" mnemonicParsing="false" onAction="#openAlbum" prefHeight="30.0" prefWidth="75.0" text="OPEN">
+               <font>
+                  <Font name="Kohinoor Devanagari Regular" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="logout" mnemonicParsing="false" onAction="#logout" prefHeight="30.0" prefWidth="75.0" text="LOGOUT">
+               <font>
+                  <Font name="Kohinoor Devanagari Regular" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="quit" mnemonicParsing="false" onAction="#quit" prefHeight="30.0" prefWidth="75.0" text="QUIT">
+               <font>
+                  <Font name="Kohinoor Devanagari Regular" size="13.0" />
+               </font>
+            </Button>
+        </items>
+      </ToolBar>
+      <Text layoutX="16.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Gallery&quot;" wrappingWidth="124.41922760009766">
+         <font>
+            <Font name="Baloo Tammudu Regular" size="26.0" />
+         </font>
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0" startX="0.5947242206235012">
+               <stops>
+                  <Stop color="#9914c4" />
+                  <Stop color="#9914c4" offset="0.007532956685499058" />
+                  <Stop color="#f01fbc" offset="0.6704331450094162" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Text>
+      <ScrollPane layoutX="302.0" layoutY="446.0" prefHeight="261.0" prefWidth="704.0">
+         <content>
+            <FlowPane id="view" fx:id="preview" prefHeight="269.0" prefWidth="705.0" />
+         </content>
+      </ScrollPane>
+      <AnchorPane layoutX="302.0" layoutY="98.0" prefHeight="333.0" prefWidth="452.0">
+         <children>
+            <ImageView fx:id="display" fitHeight="333.0" fitWidth="452.0" pickOnBounds="true" preserveRatio="true">
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+               </ImageView>
+         </children>
+      </AnchorPane>
+      <Label layoutX="1010.0" layoutY="446.0" prefHeight="17.0" prefWidth="101.0" text="photo directory:" />
+      <TextField fx:id="photoDirct" layoutX="1111.0" layoutY="441.0" />
+      <Button fx:id="addPhoto" layoutX="1290.0" layoutY="441.0" mnemonicParsing="false" onAction="#addPhoto" text="Add" />
+      <Label layoutX="786.0" layoutY="106.0" text="Photo Info:" />
+      <Label layoutX="784.0" layoutY="135.0" text="Caption:" />
+      <Label layoutX="784.0" layoutY="166.0" text="Date: " />
+      <Label layoutX="784.0" layoutY="195.0" text="Tags:" />
+      <Text fx:id="caption" layoutX="840.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text fx:id="dateTaken" layoutX="822.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <TableView fx:id="tagTable" layoutX="822.0" layoutY="195.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="1061.0" layoutY="135.0" text="Add caption:" />
+      <TextField fx:id="captionAddField" layoutX="1145.0" layoutY="130.0" />
+      <Button fx:id="captionAddButton" layoutX="1320.0" layoutY="130.0" mnemonicParsing="false" onAction="#addCaption" text="Add" />
+      <Label layoutX="1061.0" layoutY="175.0" text="Add tag:" />
+      <TextField fx:id="tagName" layoutX="1132.0" layoutY="199.0" />
+      <TextField fx:id="tagValue" layoutX="1132.0" layoutY="238.0" />
+      <Label layoutX="1083.0" layoutY="204.0" text="Name:" />
+      <Label layoutX="1083.0" layoutY="243.0" text="Value:" />
+      <Button fx:id="addTag" layoutX="1132.0" layoutY="282.0" mnemonicParsing="false" onAction="#addTag" text="Add" />
+      <Label layoutX="1061.0" layoutY="319.0" text="Delete selected tag:" />
+      <Button fx:id="deleteTag" layoutX="1199.0" layoutY="314.0" mnemonicParsing="false" onAction="#deleteTag" text="Delete" />
+      <Button fx:id="deletePhoto" layoutX="1010.0" layoutY="491.0" mnemonicParsing="false" onAction="#deletePhoto" text="Delete photo" />
+      <Text fx:id="photoName" layoutX="861.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+   </children>
+</AnchorPane>

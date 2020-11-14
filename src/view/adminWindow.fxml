@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="268.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.adminController">
+   <children>
+      <Button fx:id="logout" layoutX="241.0" layoutY="176.0" mnemonicParsing="false" onAction="#logout" prefHeight="27.0" prefWidth="90.0" text=" LOG OUT" />
+      <ListView fx:id="userList" layoutX="26.0" layoutY="35.0" prefHeight="220.0" prefWidth="161.0" />
+      <Label layoutX="26.0" layoutY="14.0" prefHeight="17.0" prefWidth="55.0" text="UserList:" />
+      <Button fx:id="add" layoutX="241.0" layoutY="86.0" mnemonicParsing="false" onAction="#addUser" prefHeight="29.0" prefWidth="90.0" text="ADD">
+         <font>
+            <Font name="Kohinoor Devanagari Regular" size="13.0" />
+         </font></Button>
+      <Button fx:id="delete" layoutX="241.0" layoutY="121.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="27.0" prefWidth="90.0" text="DELETE" />
+      <TextField fx:id="usernameInput" layoutX="205.0" layoutY="35.0" prefHeight="35.0" prefWidth="161.0" promptText="Username" />
+      <Button fx:id="quit" layoutX="241.0" layoutY="211.0" mnemonicParsing="false" onAction="#quit" prefHeight="27.0" prefWidth="90.0" text="QUIT" />
+   </children>
+</AnchorPane>
