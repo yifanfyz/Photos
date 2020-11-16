@@ -1,0 +1,7 @@
+NAME: sample5.jpg
+DATE: 11/15/2020 22:32:45
+LAST: 1605497565225
+CAPTION: 
+TAGS: 
+location nb
+location dd

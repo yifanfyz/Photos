@@ -42,7 +42,7 @@ public class loginControl {
            window.show();
        }
        else{
-           System.out.println(getClass());
+    	   //System.out.println(getClass());
 
            String username = textField.getText();
            boolean exists = false;
@@ -73,7 +73,7 @@ public class loginControl {
                String path = "src/users/currentUser.txt";
                writeFile(path, username);
                Parent parent = loader.load();
-               Scene scene = new Scene(parent,1025,730);
+               Scene scene = new Scene(parent,1200,730);
                stage.setScene(scene);
                stage.setTitle("PrivateApp");
                stage.show();

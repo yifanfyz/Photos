@@ -11,6 +11,7 @@ public class User {
     ArrayList<Album> gallery = new ArrayList<Album>();
     boolean isAdmain;
     
+    
     public User(String username) {
         this.username = username;
     }
@@ -63,9 +64,4 @@ public class User {
         }
     }
     
-    
-   
-
-    
-
 }

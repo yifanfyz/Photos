@@ -1,7 +1,5 @@
 package model;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -13,8 +11,17 @@ public class PictureFile{
 	private String caption;
 	private ArrayList<Tags> tags = new ArrayList<>();
 	private long lastModifiedDate;
+	String day;
+	String year;
+	String month;
 	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	SimpleDateFormat monthS = new SimpleDateFormat("MM");
+	SimpleDateFormat dayS = new SimpleDateFormat("dd");
+	SimpleDateFormat yearS = new SimpleDateFormat("yyyy");
 	
+	public PictureFile() {
+		//design for empty picture
+	}
 	
 	public PictureFile(File imageFile) { 
 		
@@ -22,7 +29,9 @@ public class PictureFile{
 		this.name = imageFile.getName();
 		this.date = sdf.format(imageFile.lastModified());
 		this.lastModifiedDate = imageFile.lastModified();
-		
+		this.day = dayS.format(imageFile.lastModified());
+		this.month = monthS.format(imageFile.lastModified());
+		this.year = yearS.format(imageFile.lastModified());
 		if(name.equals("")) {
 			name = imageFile.getPath();
 		}
@@ -96,9 +105,8 @@ public class PictureFile{
 	}
 	
 	public void removeTags(String name,String value){
-		tags.removeIf(tag->tag.getName().equals(name)&&tag.getValue().equals(value));
+		tags.removeIf(tag->tag.getName().compareTo(name)==0 &&tag.getValue().compareTo(value)==0);
 	}
-	
 
 	public void setName(String name) {
 		this.name = name;
@@ -124,5 +132,18 @@ public class PictureFile{
 		return temp;
 	}
 
+	public String getDay() {
+		return day;
+	}
+	
+	public String getYear() {
+		return year;
+	}
+	
+	public String getMonth() {
+		return month;
+	}
+	
+	
 }
 

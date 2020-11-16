@@ -1,5 +1,1 @@
-Tomas Edison
-Donald Trump
-1
-12
-hello
+stock

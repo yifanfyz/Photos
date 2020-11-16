@@ -17,8 +17,7 @@ public class Album{
     long latestDate = Long.MIN_VALUE;
     ArrayList<PictureFile> photoCollection = new ArrayList<PictureFile>();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    
- 
+   
   
     public Album(String name){
  
@@ -54,15 +53,23 @@ public class Album{
     	
     	rangeOfDate = earlistDateFormat+"--"+ latestDateFormat;
     }
-   public void deletePhoto(PictureFile p){
+    
+    public void deletePhoto(PictureFile p){
         photoCollection.remove(p);
         updateLastModifiedDate();
         rangeOfDate = earlistDateFormat+"--"+ latestDateFormat;
    }
    
-   private void updateLastModifiedDate() {
+   	private void updateLastModifiedDate() {
 	   earliestDate = Long.MAX_VALUE;
 	   latestDate = Long.MIN_VALUE;
+	   
+	   if(photoCollection.size()==0) {
+		   earlistDateFormat = "";
+		   latestDateFormat = "";
+		   return;
+	   }
+	   
 	   
 	   for (int i = 0; i<photoCollection.size(); i++) {
 		   
@@ -79,10 +86,6 @@ public class Album{
 	   }
 	   
    }
-   
-   
-   
-   
    
     public int getSize() {
     	return photoCollection.size();
