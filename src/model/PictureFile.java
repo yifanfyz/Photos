@@ -9,7 +9,7 @@ public class PictureFile{
 	private String date;
 	private File imageFile;
 	private String caption;
-	private ArrayList<Tags> tags = new ArrayList<>();
+	private ArrayList<Tags> tags = new ArrayList<Tags>();
 	private long lastModifiedDate;
 	String day;
 	String year;

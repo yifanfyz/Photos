@@ -166,7 +166,7 @@ public class userController implements Initializable{
 										String name,value;
 
 										name = currentLine.substring(0,currentLine.indexOf(" "));
-										value = currentLine.substring(currentLine.indexOf(" "));
+										value = currentLine.substring(currentLine.indexOf(" ")+1);
 
 										picture.addTags(name,value);
 									}
@@ -728,7 +728,8 @@ public class userController implements Initializable{
 		
 		String tagNameString = tagName.getText();
 		String tagValueString = tagValue.getText();
-		String tagString = tagNameString + " " + tagValueString;
+		System.out.println("tagValueString:"+tagValueString);
+		String tagString = tagNameString + " "+ tagValueString;
 		
 		if(currentAlbum == null) {
 			Alert alert = new Alert(AlertType.ERROR);
@@ -796,6 +797,7 @@ public class userController implements Initializable{
 				
 				//System.out.println("legal: "+legal);
 				if(legal) {
+					//System.out.println("add: "+tagString);
 					FileWriter fw = new FileWriter(fp,true);
 					BufferedWriter out = new BufferedWriter(fw);
 					out.write(tagString+"\n");
@@ -806,6 +808,7 @@ public class userController implements Initializable{
 							if(pictureFile.getName().equals(f.getName())){
 								//System.out.println("find target picture");
 								pictureFile.addTags(tagNameString,tagValueString);
+								
 								displayPhoto(pictureFile);
 								//currentPic = pictureFile;
 
@@ -820,6 +823,7 @@ public class userController implements Initializable{
 				
 				
 			}else if(multiple.isSelected() == true && single.isSelected()==false) {
+				//System.out.println("add: "+tagString);
 				FileWriter fw = new FileWriter(fp,true);
 				BufferedWriter out = new BufferedWriter(fw);
 				out.write(tagString+"\n");
@@ -1286,12 +1290,13 @@ public class userController implements Initializable{
 		
 		Button b = (Button)e.getSource();
 		if(b == searchTag) {
+			searchDisplay.getChildren().clear();
 			searchList = new Album("searchList");
 			//System.out.println("hello");
 			String type1String = type1.getText();
 			String type2String = type2.getText();
-			String value1String = " "+value1.getText();
-			String value2String = " "+value2.getText();
+			String value1String = value1.getText();
+			String value2String = value2.getText();
 				
 			if(currentAlbum == null) {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -1300,18 +1305,29 @@ public class userController implements Initializable{
 				alert.setContentText("You need to open a valid album");
 				alert.showAndWait();
 				return;
-			
 			}else if(type2.getText().length()<=0 || value2.getText().length()<=0) {
 				
 				for(int i=0; i<currentAlbum.getPhotoCollection().size(); i++) {	
 				//每张图
 					PictureFile currentPhoto = currentAlbum.getPhotoCollection().get(i);
+					
+					System.out.println("1. current Pic Name: "+currentPhoto.getName());
+					
 					for(int j=0; j<currentPhoto.getTags().size(); j++) {
 						//每张图的每个tag
 						Tags currentTag = currentPhoto.getTags().get(j);
+						
 						String currentTagType = currentTag.getName();	
 						String currentTagValue= currentTag.getValue();
-					
+						
+						System.out.println("current Tag:"+ currentTagType);
+						System.out.println("current Value:"+currentTagValue);
+						System.out.println("apinput Tag:"+ type1String);
+						System.out.println("apinput Value:"+value1String);
+						
+						System.out.println();
+						
+						
 						if(currentTagType.compareTo(type1String)==0 && currentTagValue.compareTo(value1String)==0) {
 							//System.out.println(currentPhoto.getName());
 							//得到所有符合时间要求的photo-->来吧，展示 （也是用一个FlowPane: searchDisplay
@@ -1491,7 +1507,7 @@ public class userController implements Initializable{
 
 	public void createAlbumSearch(ActionEvent e) throws IOException{
 		
-Button b = (Button)e.getSource();
+		Button b = (Button)e.getSource();
 		
 		if( b == searchCreate ) {
 			
@@ -1553,7 +1569,7 @@ Button b = (Button)e.getSource();
 				//System.out.println();
 				
 				newAlbum.addPhoto(currentPhoto);
-				
+				preload();
 				
 			}
 			
